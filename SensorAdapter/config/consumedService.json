@@ -1,0 +1,86 @@
+{
+	"consumerID": "ESP8266",
+	"requestForm": {
+	"requesterSystem": {
+		"systemName": "RPI3_SGW_TT",
+		"address": "localhost"
+	},
+	"requestedService": {
+		"serviceDefinition": "RobotCoordinates",
+		"interfaces": ["TCPRobotArm"]
+	},
+	"orchestrationFlags": {
+		"overrideStore": true,
+		"matchmaking": true,
+		"onlyPreferred": true
+	},
+	"preferredProviders": [{
+		"providerSystem": {
+			"systemName": "RoboRemo2",
+			"address": "192.168.42.52",
+			"port": "64999"
+		}
+	}]
+ }
+}
+
+
+{
+	"consumerID": "TestConsumer",
+	"requestForm": {
+		"requesterSystem": {
+			"systemGroup": "group1",
+			"systemName": "client2",
+			"address": "localhost",
+			"port": 0,
+			"authenticationInfo": "null"
+		},
+		"requestedService": {
+			"serviceGroup": "Temperature",
+			"serviceDefinition": "IndoorTemperature",
+			"interfaces": ["json"],
+			"serviceMetadata": {
+				"entry": [{
+					"key": "unit",
+					"value": "celsius"
+				}]
+			}
+		},
+		"orchestrationFlags": {
+			"entry": [{
+					"key": "overrideStore",
+					"value": true
+				},
+				{
+					"key": "matchmaking",
+					"value": true
+				},
+				{
+					"key": "metadataSearch",
+					"value": false
+				},
+				{
+					"key": "pingProviders",
+					"value": false
+				},
+				{
+					"key": "onlyPreferred",
+					"value": false
+				}
+			]
+		},
+		"preferredProviders": [{
+			"providerSystem":{
+				"systemGroup": "Room1",
+				"systemName": "TempSensor1",
+				"address": "localhost"
+			},
+			"providerCloud":{
+				"operator": "test",
+				"cloudName": "test",
+				"address": "localhost",
+				"gatekeeperServiceURI": "gatekeeper"
+			}
+		}]
+	}
+}

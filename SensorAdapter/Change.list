@@ -1,0 +1,27 @@
+
+
+v0.2.9
+- REST interface for providers (HTTP and HTTPS, using ServiceRegistryInterface)
+- config file merge
+	
+v0.2.8
+- M4.0 compatibility
+- providedServices.json file reading optimization
+- Raw token info examination
+- Secure AH interfaces (HTTPS to Orchestrator and ServiceRegistry)
+- ServiceRegistryInterface.ini and OrchestratorInterface.ini merge into adaptor.ini
+
+
+v0.2.7
+- M3.0 compatibility
+- P, C, S, M Flag handling
+- Secure Provider registration handling (authenticationInfo)
+
+v0.2.6
+- compatible with 2.0 ServiceRegistry version
+- HTTPS GET handling
+- RSASecurity class added
+
+
+v0.2.5
+- MQTT handling with mosquitto

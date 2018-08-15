@@ -1,0 +1,15 @@
+
+{
+"moteID" : "1",
+"systemName" : "SecureTemperatureSensor"
+}
+
+{
+"moteID" : "2",
+"systemName" : "TempSensor1"
+}
+
+{
+"moteID" : "mote1",
+"systemName" : "TempSensor1"
+}

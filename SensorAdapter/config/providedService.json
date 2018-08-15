@@ -1,0 +1,35 @@
+
+{
+"sensorID" : "1",
+"moteID" : "1",
+"serviceDefinition" : "IndoorTemperature_ProviderExample",
+"serviceInterface" : "REST-JSON-SENML",
+"privateKeyPath" : "keys/tempsensor.testcloud1.private.key",
+"publicKeyPath" : "keys/tempsensor.testcloud1.publickey.pem",
+"meta": {
+	"unit" : "Celsius",
+	"directRequest" : "false"
+	}
+}
+
+{
+"sensorID" : "2",
+"moteID" : "1",
+"serviceDefinition" : "IndoorHumidity",
+"serviceInterface" : "REST-JSON-SENML",
+"meta": {
+	"unit" : "%RH",
+	"directRequest" : "false"
+	}
+}
+
+{
+"sensorID" : "demosensor1",
+"moteID" : "mote1",
+"serviceDefinition" : "NetcatClient",
+"serviceInterface" : "REST-JSON-SENML",
+"meta": {
+	"unit" : "%RH",
+	"directRequest" : "false"
+	}
+}

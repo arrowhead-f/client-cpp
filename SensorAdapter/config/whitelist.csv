@@ -1,0 +1,12 @@
+# This file contains the URI for the specified chip
+# 
+# The first line must be the version
+#
+version=0.0.2
+#
+#
+# Add some comment..
+mote1:demosensor1:P, 1234, TMP345
+1:1:P, 1234, TMP
+1:1:PS, 1234, TMP
+1:2:P, 1235, HUM
