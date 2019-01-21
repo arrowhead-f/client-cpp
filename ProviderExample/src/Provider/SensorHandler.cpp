@@ -10,7 +10,6 @@
 #include <time.h>
 #include "../Security/RSASecurity.h"
 
-using namespace nlohmann;
 
 SensorHandler::SensorHandler(){
 	if (!init_ApplicationServiceInterface("ApplicationServiceInterface.ini")) {
@@ -28,18 +27,24 @@ void SensorHandler::processProvider(std::string pJsonSenML, bool _bProviderIsSec
 // todo:
 // Delete the following source code if not using json/SenML
 
-	json jsonSenML;
+	json_object *obj = json_tokener_parse(pJsonSenML.c_str());
 
-	try {
-		jsonSenML = json::parse(pJsonSenML.c_str());
-		baseName  = jsonSenML.at("bn").get<std::string>();
-		baseUnit  = jsonSenML.at("bu").get<std::string>();
-		value    = jsonSenML["e"][0].at("v").get<double>(); //SenML must contain the measured value
+	if(obj == NULL){
+	    printf("Error: Could not parse SenML: %s\n", pJsonSenML.c_str());
+	    return;
 	}
-	catch (exception &e) {
-		printf("Error: %s\n", e.what());
-		return;
+
+     json_object *jBN;
+	if(!json_object_object_get_ex(obj, "bn", &jBN)){
+	    printf("Error: received json does not contain bn field!\n");
+	    return;
 	}
+
+	std::string baseName = std::string(json_object_get_string(jBN));
+
+
+//todo: check baseUnit and value... SenML must contain the measured value
+
 
 //do not modify below this
 
@@ -258,42 +263,34 @@ int SensorHandler::Callback_Serve_HTTPs_GET(const char *URL, string *pResponse, 
 
      printf("\nRaw token info:\n%s\n\n", oRSASecurity.getDecryptedToken().c_str());
 
-     json jsonRawToken;
-     try{
-          jsonRawToken = json::parse(oRSASecurity.getDecryptedToken().c_str());
-     }
-     catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return false;
-	}
+         json_object *obj = json_tokener_parse(oRSASecurity.getDecryptedToken().c_str());
 
-	std::string service = "s";
-	try {
-		service = jsonRawToken.at("s").get<std::string>();
-	}
-	catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return false;
-	}
+    if(obj == NULL){
+	printf("Error: Could not parse token: \n%s\n", oRSASecurity.getDecryptedToken().c_str());
+	return false;
+    }
 
-	std::string consumerCommonName = "c";
-	try {
-		consumerCommonName = jsonRawToken.at("c").get<std::string>();
-	}
-	catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return 1;
-	}
+    json_object *jS;
+    if(!json_object_object_get_ex(obj, "s", &jS)){
+	printf("Error: could not find s in Token\n");
+	return false;
+    }
 
-	uint64_t expired = 0;
+    json_object *jC;
+    if(!json_object_object_get_ex(obj, "c", &jC)){
+	printf("Error: could not find c in Token\n");
+	return false;
+    }
 
-	try {
-		expired = jsonRawToken.at("e").get<uint64_t>();
-	}
-	catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return 1;
-	}
+    json_object *jE;
+    if(!json_object_object_get_ex(obj, "e", &jE)){
+	printf("Error: could not find e in Token\n");
+	return false;
+    }
+
+    std::string service            = json_object_get_string(jS);
+    std::string consumerCommonName = json_object_get_string(jC);
+    uint64_t expired               = (uint64_t)json_object_get_int64(jE); //json_object_get_int64
 
 //check s - format: interface.serviceDefinition
 //

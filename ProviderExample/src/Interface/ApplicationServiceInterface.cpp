@@ -128,105 +128,116 @@ int ApplicationServiceInterface::Unload_IniFile()
 	return 1;
 }
 
+inline const char *GetHttpPayload(Arrowhead_Data_ext &stAH_data, string ADDRESS, string ADDRESS6, unsigned short PORT)
+{
+
+//Expected content, example:
+//{
+//	"providedService": {
+//		"serviceDefinition" : "IndoorTemperature",
+//		"interfaces" : ["json"],
+//		"serviceMetadata" : {
+//			"unit" : "celsius",
+//			"security" : "token"
+//		}
+//	},
+//	"provider":{
+//		"systemName" : "SecureTemperatureSensor",
+//		"address" : "10.0.0.2",
+//		"port" : 8454,
+//		"authenticationInfo" : "dfasfdsafdsa"
+//	},
+//	"serviceURI": "moteID/sensorID/interface-type",
+//
+//	"version" : 1
+//	"udp": false,
+//	"ttl": 255
+//}
+
+    json_object *jobj            = json_object_new_object();
+    json_object *providedService = json_object_new_object();
+    json_object *provider        = json_object_new_object();
+    json_object *jstring;
+    json_object *jint;
+
+/*
+*   ProvidedService section
+*/
+
+    jstring = json_object_new_string(stAH_data.sServiceDefinition.c_str());
+    json_object_object_add(providedService, "serviceDefinition", jstring);
+
+    json_object *jarray = json_object_new_array();
+    jstring = json_object_new_string(stAH_data.sserviceInterface.c_str());
+    json_object_array_add(jarray, jstring);
+    json_object_object_add(providedService, "interfaces", jarray);
+
+    json_object *serviceMetadata = json_object_new_object();
+    jstring = json_object_new_string(stAH_data.vService_Meta["unit"].c_str());
+    json_object_object_add(serviceMetadata, "unit", jstring);
+
+    if(stAH_data.sAuthenticationInfo.size() != 0){
+	jstring = json_object_new_string(stAH_data.vService_Meta["security"].c_str());
+	json_object_object_add(serviceMetadata, "security", jstring);
+    }
+
+    json_object_object_add(providedService, "serviceMetadata", serviceMetadata);
+
+/*
+*   Provider section
+*/
+    jstring = json_object_new_string(stAH_data.sSystemName.c_str());
+    json_object_object_add(provider, "systemName", jstring);
+
+    jstring = json_object_new_string( ADDRESS.size() != 0 ? ADDRESS6.c_str() : ADDRESS.c_str());
+    json_object_object_add(provider, "address", jstring);
+
+    if(stAH_data.sAuthenticationInfo.size() != 0){
+
+	jstring = json_object_new_string(stAH_data.sAuthenticationInfo.c_str());
+	json_object_object_add(provider, "authenticationInfo", jstring);
+
+	jint = json_object_new_int(PORT+1);
+	json_object_object_add(provider, "port", jint);
+    }
+    else{
+	jint = json_object_new_int(PORT);
+	json_object_object_add(provider, "port", jint);
+    }
+
+/*
+*   Concatenation
+*/
+
+    json_object_object_add(jobj, "providedService", providedService);
+    json_object_object_add(jobj, "provider", provider);
+
+    jstring = json_object_new_string(stAH_data.sServiceURI.c_str());
+    json_object_object_add(jobj, "serviceURI", jstring);
+
+    jint = json_object_new_int(1);
+    json_object_object_add(jobj, "version", jint);
+
+/*
+*   Return
+*/
+
+    return json_object_to_json_string(jobj);
+
+}
+
 int ApplicationServiceInterface::registerToServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecureArrowheadInterface )
 {
-	//Expected content, example:
-	//{
-	//	"providedService": {
-	//		"serviceDefinition" : "IndoorTemperature",
-	//		"interfaces" : ["json"],
-	//		"serviceMetadata" : {
-	//			"unit" : "celsius"
-	//		}
-	//	},
-	//	"provider":{
-	//		"systemName" : "SecureTemperatureSensor",
-	//		"address" : "10.0.0.2",
-	//		"port" : 8454,
-	//	},
-	//	"serviceURI": "moteID/sensorID/interface-type",
-	//
-	//	"version" : 1
-	//	"udp": false,
-	//	"ttl": 255
-	//}
-
-	json jHTTPpayload;
-	json jProvidedService;
-	json jServiceMetadata;
-	json jProvider;
-
-     for(std::map<std::string,std::string>::iterator it = stAH_data.vService_Meta.begin(); it!=stAH_data.vService_Meta.end(); ++it ){
-          if( (stAH_data.sAuthenticationInfo.size() == 0) && (strcmp(it->first.c_str(), "security") == 0) )
-               continue;
-
-          jServiceMetadata[it->first] = it->second;
-     }
-
-	jProvidedService["serviceDefinition"] = stAH_data.sServiceDefinition;
-	jProvidedService["interfaces"] = { stAH_data.sserviceInterface };
-	jProvidedService["serviceMetadata"] = jServiceMetadata;
-
-	jProvider["systemName"] = stAH_data.sSystemName;
-	jProvider["address"] = ADDRESS.size()==0 ? ADDRESS6 : ADDRESS;
-
-	if(stAH_data.sAuthenticationInfo.size() != 0){
-          jProvider["port"] = PORT+1;
-          jProvider["authenticationInfo"] = stAH_data.sAuthenticationInfo;
-	}
-	else{
-          jProvider["port"] = PORT;
-          //jProvider["authenticationInfo"] = "null";
-	}
-
-	jHTTPpayload["providedService"] = jProvidedService;
-	jHTTPpayload["provider"] = jProvider;
-	jHTTPpayload["serviceURI"] = stAH_data.sServiceURI;
-	jHTTPpayload["version"] = 1;
-	//jHTTPpayload["udp"] = "false";
-	//jHTTPpayload["ttl"] = 255;
-
-	//printf("register\n");
-	//printf("payload: %s\n", jHTTPpayload.dump().c_str());
-	//printf("https uri: %s\n", SR_BASE_URI_HTTPS.c_str());
-
-     if(_bSecureArrowheadInterface)
-          return SendHttpsRequest(jHTTPpayload.dump(), SR_BASE_URI_HTTPS + "register", "POST");
+	if(_bSecureArrowheadInterface)
+          return SendHttpsRequest(GetHttpPayload(stAH_data, ADDRESS, ADDRESS6, PORT), SR_BASE_URI_HTTPS + "register", "POST");
      else
-          return SendRequest(jHTTPpayload.dump(), SR_BASE_URI + "register", "POST");
+          return SendRequest(GetHttpPayload(stAH_data, ADDRESS, ADDRESS6, PORT), SR_BASE_URI + "register", "POST");
 }
 
 int ApplicationServiceInterface::unregisterFromServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecureArrowheadInterface)
 {
-	json jHTTPpayload;
-	json jProvidedService;
-	json jServiceMetadata;
-	json jProvider;
-
-     for(std::map<std::string,std::string>::iterator it = stAH_data.vService_Meta.begin(); it!=stAH_data.vService_Meta.end(); ++it ){
-          if( (stAH_data.sAuthenticationInfo.size() == 0) && (strcmp(it->first.c_str(), "security") == 0) )
-               continue;
-
-          jServiceMetadata[it->first] = it->second;
-     }
-
-	jProvidedService["serviceDefinition"] = stAH_data.sServiceDefinition;
-	jProvidedService["interfaces"] = { stAH_data.sserviceInterface };
-	jProvidedService["serviceMetadata"] = jServiceMetadata;
-
-	jProvider["systemName"] = stAH_data.sSystemName;
-	jProvider["address"] = ADDRESS.size()==0 ? ADDRESS6 : ADDRESS;
-	jProvider["port"] = PORT;
-
-	jHTTPpayload["providedService"] = jProvidedService;
-	jHTTPpayload["provider"] = jProvider;
-	jHTTPpayload["serviceURI"] = stAH_data.sServiceURI;
-	jHTTPpayload["version"] = 1;
-	//jHTTPpayload["udp"] = "false";
-	//jHTTPpayload["ttl"] = 255;
-
      if(_bSecureArrowheadInterface)
-          return SendHttpsRequest(jHTTPpayload.dump(), SR_BASE_URI_HTTPS + "remove", "PUT");
+          return SendHttpsRequest(GetHttpPayload(stAH_data, ADDRESS, ADDRESS6, PORT), SR_BASE_URI_HTTPS + "remove", "PUT");
      else
-          return SendRequest(jHTTPpayload.dump(), SR_BASE_URI + "remove", "PUT");
+          return SendRequest(GetHttpPayload(stAH_data, ADDRESS, ADDRESS6, PORT), SR_BASE_URI + "remove", "PUT");
 }

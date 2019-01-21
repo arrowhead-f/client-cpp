@@ -8,7 +8,9 @@ using namespace std;
 #include <cstring>
 #include <list>
 
-#include "json.hpp"
+#include <map>
+#include <vector>
+#include <json-c/json.h>
 #include "Http_Handler.hpp"
 #include "Https_Handler.hpp"
 
@@ -21,8 +23,6 @@ using namespace std;
 #endif
 
 using namespace std;
-using namespace nlohmann;
-
 
 typedef struct _Arrowhead_Data_ext
 {

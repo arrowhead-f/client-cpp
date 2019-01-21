@@ -1,5 +1,5 @@
 INC=-Isrc/Interface/include/mhttpd/ -Isrc/Interface/include/curl/
-LIB=-lpthread -lmicrohttpd -lcurl -lcrypto -lgnutls
+LIB=-lpthread -lmicrohttpd -lcurl -lcrypto -lgnutls -ljson-c
 CC=g++
 
 .PHONY: all clean
