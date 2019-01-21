@@ -22,5 +22,17 @@ In a case of missing libcrypto.so:
 
 >	sudo ln –s libcrypto.so.1.0.0 /lib/arm-linux-gnueabihf/libcrypt-2.24.so
 
-The example code contains a Makefile to build the sources for the current architecture:
-> make
+The example projects contain a Makefile to build the sources for the current architecture. 
+
+
+To support UDP/SenML -> MQTT translation, download, build and install the Eclipse Mosquitto project, using the following commands. Before make, copy (if necessary, overwrite) the source files from SensorAdapter/changes/MQTT directory to the downloaded mosquitto/src directory.
+>	tar -xvzf mosquitto-1.4.15.tar.gz
+>	make
+>	sudo make install
+
+To build the Eclipse Mosquitto project, the following linux packages must be installed (sudo apt-get install):
+>	libc-ares-dev
+>	uuid-dev
+>	xsltproc
+
+There is a Provider and Consumer example Linux project (tested on Raspbian) written on C++. The Provider example registers a basic REST/JSON-SenML provider into the ArrowheadServiceRegistry module, and defines a HTTP or HTTPS interface for the Consumer. The Consumer example project orchestrates from the Arrowhead Orchestrator the Provider’s URI (on HTTP or HTTPS), and sends HTTP or HTTPS requests to receive the latest measured value
