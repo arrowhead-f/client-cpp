@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#./ConsumerExample
+./ConsumerExample
 
 #./ConsumerExample --secureArrowheadInterface
 
-./ConsumerExample --secureArrowheadInterface --secureProviderInterface
+#./ConsumerExample --secureArrowheadInterface --secureProviderInterface

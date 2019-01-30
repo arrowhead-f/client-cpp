@@ -14,7 +14,7 @@
 #include <windows.h>
 #endif
 
-const std::string version = "0.2.8";
+const std::string version = "4.0";
 
 bool bSecureProviderInterface = false;
 bool bSecureArrowheadInterface = false;

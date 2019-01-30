@@ -1,5 +1,5 @@
 INC=-Isrc/Interface/include/curl
-LIB=-lmicrohttpd -lcurl -lcrypto -lpthread
+LIB=-lmicrohttpd -lcurl -lcrypto -lpthread -ljson-c
 CC=g++
 
 .PHONY: all clean
@@ -42,3 +42,4 @@ b64.o: src/Security/base64.cpp
 
 clean:
 	rm -f *.o cons
+

@@ -4,8 +4,6 @@
 
 size_t Https_Handler::httpsResponseCallback(char *ptr, size_t size)
 {
-	printf("\nhttps virtual: %s\n", ptr);
-
 	return size;
 }
 
@@ -85,7 +83,7 @@ int Https_Handler::SendHttpsRequest(string pdata, string paddr, string pmethod)
 		res = curl_easy_perform(curl);
 
 		if(res != CURLE_OK)
-			fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+			printf("Error: curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 
           curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 

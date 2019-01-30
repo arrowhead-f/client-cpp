@@ -10,8 +10,8 @@
 
 using namespace std;
 
-#define SERVERKEYFILE	"/home/tottthy/SensorGW/client1/client1.testcloud1.key"
-#define SERVERCERTFILE	"/home/tottthy/SensorGW/client1/client1.testcloud1.crt"
+#define SERVERKEYFILE	"keys/client1.testcloud1.key"
+#define SERVERCERTFILE	"keys/client1.testcloud1.crt"
 
 class Https_Handler
 {

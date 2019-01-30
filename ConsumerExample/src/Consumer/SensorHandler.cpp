@@ -8,12 +8,10 @@
 #include <thread>
 #include <algorithm>
 #include <time.h>
-
+#include <vector>
 #include "StringManipulation.hpp"
 
 #include "../Security/RSASecurity.h"
-
-using namespace nlohmann;
 
 SensorHandler::SensorHandler(){
      bSecureProviderInterface = false;
@@ -28,25 +26,20 @@ SensorHandler::~SensorHandler(void){
 }
 
 void SensorHandler::processConsumer(std::string pJsonSenML, bool _bSecureArrowheadInterface) {
-	json jsonSenML;
+	json_object *obj = json_tokener_parse(pJsonSenML.c_str());
 
-	try {
-		jsonSenML = json::parse(pJsonSenML.c_str());
-	}
-	catch (exception &e) {
-		printf("Error: %s\n", e.what());
-		return;
+	if(obj == NULL){
+	    printf("Error: Could not parse payload: %s\n", pJsonSenML.c_str());
+	    return;
 	}
 
-	std::string consumerID;
+	json_object *jBN;
+	if(!json_object_object_get_ex(obj, "bn", &jBN)){
+	    printf("Error: received json does not contain bn field!\n");
+	    return;
+	}
 
-	try {
-		consumerID = jsonSenML.at("bn").get<std::string>();
-	}
-	catch (exception &e) {
-		printf("Error: %s\n", e.what());
-		return;
-	}
+	std::string consumerID = std::string(json_object_get_string(jBN));
 
 	printf("consumerID: %s\n", consumerID.c_str());
 
@@ -91,58 +84,68 @@ size_t SensorHandler::Callback_OrchestrationResponse(char *ptr, size_t size) {
 //  ]
 //}
 //
-     //printf("Orchestration response: %s\n", ptr);
+     printf("Orchestration response: %s\n", ptr);
 
-	json jHTTPResponsePayload;
-	string sHTTPResponse;
-	json jProvider;
-	json jService;
-
-	try {
-		jHTTPResponsePayload	= json::parse(ptr);
-		sHTTPResponse			= jHTTPResponsePayload["response"][0].at("provider").dump();
-		jProvider				= json::parse( jHTTPResponsePayload["response"][0].at("provider").dump().c_str() );
-		jService				= json::parse( jHTTPResponsePayload["response"][0].at("service").dump().c_str());
-	}
-	catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return 1;
-	}
-
-	string sIPAddress;
+     std::string token;
+     std::string signature;
+     string sIPAddress;
 	uint32_t uPort;
 	string sInterface;
 	string sURI;
 
-	try {
-		sIPAddress	= jProvider.at("address").dump();
-		sIPAddress	= sIPAddress.substr(1, sIPAddress.size() - 2); //cut ""
+     struct json_object *obj = json_tokener_parse(ptr);
+     if(obj == NULL){
+          printf("Error: could not parse orchestration response\n");
+          return 1;
+     }
 
-		uPort		= jProvider.at("port").get<uint32_t>();
+     struct json_object *jResponseArray;
+     if(!json_object_object_get_ex(obj, "response", &jResponseArray)){
+          printf("Error: could not parse response\n");
+          return 1;
+     }
 
-		sInterface	= jService["interfaces"][0].dump();
-		sInterface	= sInterface.substr(1, sInterface.size() - 2); //cut ""
+     struct json_object *jResponse = json_object_array_get_idx(jResponseArray, 0);
+     struct json_object *jProv2;
 
-		sURI		= jHTTPResponsePayload["response"][0].at("serviceURI").dump();
-		sURI		= sURI.substr(1, sURI.size() - 2); //cut ""
-	}
-	catch (exception& e) {
-		printf("Error: %s\n", e.what());
-		return 1;
-	}
+     if(!json_object_object_get_ex(jResponse, "provider", &jProv2)){
+          printf("Error: could not parse provider section\n");
+          return 1;
+     }
 
-     std::string token;
-     std::string signature;
+     struct json_object *jAddr;
+     struct json_object *jPort;
+     struct json_object *jService;
+     struct json_object *jIntf;
+     struct json_object *jIntf0;
+     struct json_object *jUri;
+     struct json_object *jToken;
+     struct json_object *jSignature;
+
+     if(!json_object_object_get_ex(jProv2,    "address",    &jAddr))    {printf("Error: could not find address\n");    return 1;}
+     if(!json_object_object_get_ex(jProv2,    "port",       &jPort))    {printf("Error: could not find port\n");       return 1;}
+     if(!json_object_object_get_ex(jResponse, "service",    &jService)) {printf("Error: could not find service\n");    return 1;}
+     if(!json_object_object_get_ex(jService,  "interfaces", &jIntf))    {printf("Error: could not find interface\n");  return 1;}
+     if(!json_object_object_get_ex(jResponse,  "serviceURI", &jUri))     {printf("Error: could not find serviceURI\n"); return 1;}
+
+     jIntf0 = json_object_array_get_idx(jIntf, 0);
+
+     if(jIntf0 == NULL){
+          printf("Error: could not find interface\n");
+          return 1;
+     }
+
+	sIPAddress = string(json_object_get_string(jAddr));
+	uPort      = json_object_get_int(jPort);
+	sInterface = string(json_object_get_string(jIntf0));
+     sURI       = string(json_object_get_string(jUri));
 
      if(bSecureProviderInterface){
-          try{
-               token     = json::parse( jHTTPResponsePayload["response"][0].at("authorizationToken").dump().c_str() );
-               signature = json::parse( jHTTPResponsePayload["response"][0].at("signature").dump().c_str() );
-          }
-          catch (exception &e){
-               printf("Error: %s\n", e.what());
-               return 1;
-          }
+          if(!json_object_object_get_ex(jResponse,  "authorizationToken", &jToken))      {printf("Error: could not find authorizationToken\n"); return 1;}
+          if(!json_object_object_get_ex(jResponse,  "signature",          &jSignature))  {printf("Error: could not find signature\n");          return 1;}
+
+          token     = string(json_object_get_string(jToken));
+          signature = string(json_object_get_string(jSignature));
 
           //https://ipaddr:port/serviceURI?token=_token_&signature=_signature_
           std::string sProviderURI = "https://" + sIPAddress + ":" + std::to_string(uPort) + "/" + sURI + "?token=" + token + "&signature=" + signature;
@@ -163,7 +166,6 @@ inline size_t providerHttpResponseHandler(char *ptr, size_t size, size_t nmemb, 
 
 void SensorHandler::sendRequestToProvider(std::string _sProviderURI){
 
-     //printf("\nsendHttpRequestToProvider: %s\n", _sProviderURI.c_str());
      printf("\nsendHttpRequestToProvider\n");
 
      int http_code = 0;

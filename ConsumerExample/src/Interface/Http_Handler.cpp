@@ -7,8 +7,6 @@
 
 size_t Http_Handler::httpResponseCallback(char *ptr, size_t size)
 {
-	printf("\nvirtual: %s\n", ptr);
-
 	return size;
 }
 
@@ -37,9 +35,8 @@ int Http_Handler::SendRequest(string pdata, string paddr, string pmethod)
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-		if (pmethod == "PUT"){
-               curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-		}
+		if (pmethod == "PUT")
+                        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, pdata.c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);
@@ -49,6 +46,7 @@ int Http_Handler::SendRequest(string pdata, string paddr, string pmethod)
 
 		curl_easy_setopt(curl, CURLOPT_URL, paddr.c_str());
 
+		// Perform the request, res will get the return code
 		res = curl_easy_perform(curl);
 
 		if(res != CURLE_OK)
@@ -79,7 +77,9 @@ extern "C" int MHD_Callback(void *cls,
           const char *url,
           const char *method,
           const char *version,
-          const char *upload_data, size_t *upload_data_size, void **ptr)
+          const char *upload_data,
+          size_t *upload_data_size,
+          void **ptr)
 {
 	static int aptr;
 	struct MHD_Response *response;
@@ -132,5 +132,6 @@ int Http_Handler::KillServer()
 		pmhd = NULL;
 		return 0;
 	}
-return 1;
+
+        return 1;
 }
