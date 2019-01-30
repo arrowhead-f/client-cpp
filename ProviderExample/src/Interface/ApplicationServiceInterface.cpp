@@ -189,7 +189,7 @@ inline const char *GetHttpPayload(Arrowhead_Data_ext &stAH_data, string ADDRESS,
     jstring = json_object_new_string(stAH_data.sSystemName.c_str());
     json_object_object_add(provider, "systemName", jstring);
 
-    jstring = json_object_new_string( ADDRESS.size() != 0 ? ADDRESS6.c_str() : ADDRESS.c_str());
+    jstring = json_object_new_string( ADDRESS.size() != 0 ? ADDRESS.c_str() : ADDRESS6.c_str());
     json_object_object_add(provider, "address", jstring);
 
     if(stAH_data.sAuthenticationInfo.size() != 0){
