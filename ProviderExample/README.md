@@ -12,10 +12,10 @@ The operation is based on the "ApplicationServiceInterface.ini" configuration fi
   address: this is the local IP address (e.g. the IP address of the eth0 interface on a RaspBerry)
 
 Installation steps on RaspBerry:
-1) 
+1) Install the following packages:
 > sudo apt-get install openssl libgnutls28-dev libgnutlsxx28 libssl1.1 libssl1.0-dev libcurl3 libcurl3-gnutls libcurl4-gnutls-dev libcrypto++-dev libcrypto++-utils libcrypto++6 libgpg-error-dev automake texinfo g++ libjson-c-dev
 
-2) download libmicrohttpd-0.9.59
+2) Download libmicrohttpd-0.9.59
 > tar -xvzf libmicrohttpd-0.9.59.tar.gz
 > ./configure --with-gnutls
 > make; sudo make install
@@ -23,11 +23,11 @@ Installation steps on RaspBerry:
 > cd /usr/lib
 > sudo ln -s /usr/local/lib/libmicrohttpd.so.12.46.0 libmicrohttpd.so.12
 
-3) in a case of missing libcrypto.so
+3) In a case of missing libcrypto.so:
 > cdr /usr/lib
 > sudo ln -s libcrypto.so.1.0.0 /lib/arm-linux-gnueabihf/libcrypt-2.24.so
 
-4) compile ProviderExample using make
+4) Compile ProviderExample using make
 > ./ProviderExample
 
 To grant a secure (HTTPS) communication  to the ServiceRegistry module, use the "./ProviderExample --secureArrowheadInterface" command.
