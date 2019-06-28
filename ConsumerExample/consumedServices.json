@@ -9,7 +9,7 @@
 		},
 		"requestedService": {
 			"serviceDefinition": "IndoorTemperature_ProviderExample",
-			"interfaces": ["REST-JSON-SENML"],
+			"interfaces": ["JSON"],
 			"serviceMetadata":{
 				"security" : "token"
 			}
