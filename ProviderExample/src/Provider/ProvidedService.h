@@ -10,7 +10,7 @@ private:
      std::string customURL         = "this_is_the_custom_url";
      std::string systemName        = "SecureTemperatureSensor";
      std::string serviceDefinition = "IndoorTemperature_ProviderExample";
-     std::string serviceInterface  = "REST-JSON-SENML";
+     std::string serviceInterface  = "JSON";
      std::string privateKeyPath    = "keys/tempsensor.testcloud1.private.key";
      std::string publicKeyPath     = "keys/tempsensor.testcloud1.publickey.pem";
 
