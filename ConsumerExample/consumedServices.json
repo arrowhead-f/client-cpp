@@ -1,33 +1,24 @@
 {
-	"consumerID": "TestconsumerID",
+	"consumerID": "client1",
 	"requestForm": {
-		"requesterSystem": {
-			"systemName": "client1",
-			"address": "dontcare",
-			"port": 8454,
-			"authenticationInfo": "null"
+		"orchestrationFlags": {
+			"overrideStore": true
 		},
 		"requestedService": {
-			"serviceDefinition": "IndoorTemperature_ProviderExample",
-			"interfaces": ["JSON"],
-			"serviceMetadata":{
-				"security" : "token"
-			}
+			"interfaceRequirements": [
+				"HTTP-SECURE-JSON"
+			],
+			"securityRequirements": [
+				"TOKEN"
+			],
+			"serviceDefinitionRequirement":
+				"IndoorTemperature_ProviderExample"
 		},
-		"orchestrationFlags": {
-			"overrideStore" : true,
-			"matchmaking" : true,
-			"metadataSearch" : false,
-			"pingProviders" : false,
-			"onlyPreferred" : true,
-			"externalServiceRequest" : false
-			},
-		"preferredProviders": [{
-			"providerSystem":{
-				"systemName": "SecureTemperatureSensor",
-				"address": "10.10.10.122",
-				"port":"8452"
-			}
-		}]
+		"requesterSystem":
+		{
+			"address": "10.10.10.122",
+			"port": 8585,
+			"systemName": "client1"
+		}
 	}
 }

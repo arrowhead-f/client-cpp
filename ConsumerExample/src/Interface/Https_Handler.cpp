@@ -45,30 +45,30 @@ int Https_Handler::SendHttpsRequest(string pdata, string paddr, string pmethod)
           //---------------HTTPS SECTION--------------------------------------------------------
           //
           //--verbose
-          //if ( curl_easy_setopt(curl, CURLOPT_VERBOSE,        1L)            != CURLE_OK)
-          //     printf("error: CURLOPT_VERBOSE\n");
+          if ( curl_easy_setopt(curl, CURLOPT_VERBOSE,        1L)            != CURLE_OK)
+               printf("error: CURLOPT_VERBOSE\n");
           //--insecure
           if ( curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L)            != CURLE_OK)
                printf("error: CURLOPT_SSL_VERIFYPEER\n");
           if ( curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)            != CURLE_OK)
                printf("error: CURLOPT_SSL_VERIFYHOST\n");
           //--cert
-          if ( curl_easy_setopt(curl, CURLOPT_SSLCERT,        "keys/clcert.pem")  != CURLE_OK)
+          if ( curl_easy_setopt(curl, CURLOPT_SSLCERT,        "keys2/clcert.pem")  != CURLE_OK)
                printf("error: CURLOPT_SSLCERT\n");
           //--cert-type
           if ( curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE,    "PEM")         != CURLE_OK)
                printf("error: CURLOPT_SSLCERTTYPE\n");
           //--key
-          if ( curl_easy_setopt(curl, CURLOPT_SSLKEY,         "keys/privkey.pem") != CURLE_OK)
+          if ( curl_easy_setopt(curl, CURLOPT_SSLKEY,         "keys2/privkey.pem") != CURLE_OK)
                printf("error: CURLOPT_SSLKEY\n");
           //--key-type
           if ( curl_easy_setopt(curl, CURLOPT_SSLKEYTYPE,     "PEM")         != CURLE_OK)
                printf("error: CURLOPT_SSLKEYTYPE\n");
           //--pass
-          if ( curl_easy_setopt(curl, CURLOPT_KEYPASSWD,      "12345")       != CURLE_OK)
+          if ( curl_easy_setopt(curl, CURLOPT_KEYPASSWD,      "123456")       != CURLE_OK)
                printf("error: CURLOPT_KEYPASSWD\n");
           //--cacert
-          if ( curl_easy_setopt(curl, CURLOPT_CAINFO,         "keys/cacert.pem")  != CURLE_OK)
+          if ( curl_easy_setopt(curl, CURLOPT_CAINFO,         "keys2/cacert.pem")  != CURLE_OK)
                printf("error: CURLOPT_CAINFO\n");
           //
           //---------------END OF HTTPS SECTION-------------------------------------------------

@@ -90,8 +90,10 @@ int Http_Handler::SendRequest(string pdata, string paddr, string pmethod)
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-		if (pmethod == "PUT")
-			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+		if(pmethod == "POST")
+			curl_easy_setopt(curl, CURLOPT_POST, true);
+		else
+			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, pmethod.c_str());
 
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, pdata.c_str());
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L);
@@ -140,8 +142,6 @@ extern "C" int MHD_Callback(void *cls,
      string cb_data;
      int value;
      int ret = MHD_YES;
-
-     printf("MHD_Callback\n");
 
 //todo: check other methods, if needed, e.g. POST
 

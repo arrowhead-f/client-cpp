@@ -13,9 +13,9 @@
 
 using namespace std;
 
-#define SERVERKEYFILE	"keys/tempsensor.testcloud1.private.key" //password protected private key
-#define SERVERCERTFILE	"keys/tempsensor.testcloud1.publicCert.pem"
-#define ROOTCACERTFILE   "keys/tempsensor.testcloud1.caCert.pem"
+#define SERVERKEYFILE	"keys2/tempsensor.testcloud2.privkey.pem" //password protected private key
+#define SERVERCERTFILE	"keys2/tempsensor.testcloud2.clcert.pem"
+#define ROOTCACERTFILE  "keys2/tempsensor.testcloud2.caCert.pem"
 
 class Https_Handler
 {

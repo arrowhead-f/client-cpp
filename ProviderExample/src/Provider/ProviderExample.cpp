@@ -16,7 +16,7 @@
      #include <windows.h>
 #endif
 
-const std::string version = "4.0";
+const std::string version = "4.1.3";
 
 bool bSecureProviderInterface = false; //Enables HTTPS interface on the application service (with token enabled)
 bool bSecureArrowheadInterface = false; //Enables HTTPS interface towards ServiceRegistry AH module
@@ -81,4 +81,3 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
-

@@ -10,9 +10,9 @@ private:
      std::string customURL         = "this_is_the_custom_url";
      std::string systemName        = "SecureTemperatureSensor";
      std::string serviceDefinition = "IndoorTemperature_ProviderExample";
-     std::string serviceInterface  = "JSON";
-     std::string privateKeyPath    = "keys/tempsensor.testcloud1.private.key";
-     std::string publicKeyPath     = "keys/tempsensor.testcloud1.publickey.pem";
+     std::string serviceInterface  = "HTTP-SECURE-JSON"; // name pattern: protocol-SECURE or INSECURE format. (e.g.: HTTPS-SECURE-JSON)
+     std::string privateKeyPath    = "keys2/tempsensor.testcloud2.privkey.pem";
+     std::string publicKeyPath     = "keys2/tempsensor.testcloud2.pubkey.pem";
 
 public:
 //do not modify below this

@@ -23,8 +23,8 @@ public:
 
      std::string baseName;
      std::string baseUnit;
-	double value;
-	std::string lastMeasuredValue;
+	 double value;
+	 std::string lastMeasuredValue;
      std::string privateKeyPath;
      std::string publicKeyPath;
      std::string customURL;
@@ -35,7 +35,7 @@ public:
 
 	/*Sensor registration, deregistration --- ApplicationService functions*/
 	bool registerSensor(std::string _jsonSenML, bool _bProviderIsSecure, bool _bSecureArrowheadInterface);
-	bool deregisterSensor(std::string _sensorURI, bool _bSecureArrowheadInterface);
+	bool deregisterSensor(std::string _sensorURI, bool _bProviderIsSecure, bool _bSecureArrowheadInterface);
 
 };
 

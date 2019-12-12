@@ -59,8 +59,8 @@ public:
 
 	bool init_ApplicationServiceInterface( string ini_file );
 	int deinit( );
-	int registerToServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecure);
-	int unregisterFromServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecureArrowheadInterface);
+	int registerToServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecureArrowheadInterface, bool _bProviderIsSecure);
+	int unregisterFromServiceRegistry(Arrowhead_Data_ext &stAH_data, bool _bSecureArrowheadInterface, bool _bProviderIsSecure);
 
 	int httpGETCallback(const char *Id, string *pData_str);
 	int httpsGETCallback(const char *Id, string *pData_str, string param_token, string param_signature, string clientDistName);

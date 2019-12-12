@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
 
      oSensorHandler.bSecureProviderInterface = bSecureProviderInterface;
 
-	std::string consumerMessageExample = (std::string)"{\"bn\":\"TestconsumerID\"\n}";//json - SenML format
+	std::string consumerMessageExample = (std::string)"{\"bn\":\"client1\"\n}";//json - SenML format
 
      oSensorHandler.processConsumer( consumerMessageExample, bSecureArrowheadInterface);
 
@@ -59,4 +59,3 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
-

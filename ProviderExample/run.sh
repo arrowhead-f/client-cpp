@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-./ProviderExample
+#./ProviderExample
 
 #./ProviderExample --secureArrowheadInterface
 
-#./ProviderExample --secureArrowheadInterface --secureProviderInterface
+./ProviderExample --secureArrowheadInterface --secureProviderInterface

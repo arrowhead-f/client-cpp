@@ -36,37 +36,41 @@ int Https_Handler::SendHttpsRequest(string pdata, string paddr, string pmethod)
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-		if (pmethod == "PUT")
-			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-          else if(pmethod == "POST")
-               curl_easy_setopt(curl, CURLOPT_POST, true);
+		if(pmethod == "POST")
+			curl_easy_setopt(curl, CURLOPT_POST, true);
+		else
+			curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, pmethod.c_str());
+
 
           //---------------HTTPS SECTION--------------------------------------------------------
           //--verbose
           //if ( curl_easy_setopt(curl, CURLOPT_VERBOSE,        1L)            != CURLE_OK)
-          //     printf("error: CURLOPT_VERBOSE\n");
+          // printf("error: CURLOPT_VERBOSE\n");
           //--insecure
           if ( curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L)            != CURLE_OK)
                printf("error: CURLOPT_SSL_VERIFYPEER\n");
           if ( curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L)            != CURLE_OK)
                printf("error: CURLOPT_SSL_VERIFYHOST\n");
           //--cert
-          if ( curl_easy_setopt(curl, CURLOPT_SSLCERT,        "keys/tempsensor.testcloud1.publicCert.pem")  != CURLE_OK)
+          //if ( curl_easy_setopt(curl, CURLOPT_SSLCERT,        "keys/tempsensor.testcloud1.publicCert.pem")  != CURLE_OK)
+		  if ( curl_easy_setopt(curl, CURLOPT_SSLCERT,        "keys2/tempsensor.testcloud2.clcert.pem")  != CURLE_OK)
                printf("error: CURLOPT_SSLCERT\n");
           //--cert-type
           if ( curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE,    "PEM")         != CURLE_OK)
                printf("error: CURLOPT_SSLCERTTYPE\n");
           //--key
-          if ( curl_easy_setopt(curl, CURLOPT_SSLKEY,         "keys/tempsensor.testcloud1.private.key") != CURLE_OK)
+          //if ( curl_easy_setopt(curl, CURLOPT_SSLKEY,         "keys/tempsensor.testcloud1.private.key") != CURLE_OK)
+		  if ( curl_easy_setopt(curl, CURLOPT_SSLKEY,         "keys2/tempsensor.testcloud2.privkey.pem") != CURLE_OK)
                printf("error: CURLOPT_SSLKEY\n");
           //--key-type
           if ( curl_easy_setopt(curl, CURLOPT_SSLKEYTYPE,     "PEM")         != CURLE_OK)
                printf("error: CURLOPT_SSLKEYTYPE\n");
           //--pass
-          if ( curl_easy_setopt(curl, CURLOPT_KEYPASSWD,      "12345")       != CURLE_OK)
+          if ( curl_easy_setopt(curl, CURLOPT_KEYPASSWD,      "123456")       != CURLE_OK)
                printf("error: CURLOPT_KEYPASSWD\n");
           //--cacert
-          if ( curl_easy_setopt(curl, CURLOPT_CAINFO,         "keys/tempsensor.testcloud1.caCert.pem")  != CURLE_OK)
+          //if ( curl_easy_setopt(curl, CURLOPT_CAINFO,         "keys/tempsensor.testcloud1.caCert.pem")  != CURLE_OK)
+		  if ( curl_easy_setopt(curl, CURLOPT_CAINFO,         "keys2/tempsensor.testcloud2.caCert.pem")  != CURLE_OK)
                printf("error: CURLOPT_CAINFO\n");
           //
           //---------------END OF HTTPS SECTION-------------------------------------------------
@@ -304,7 +308,7 @@ int Https_Handler::MakeHttpsServer(unsigned short listen_port)
 			listen_port,
 			NULL, NULL, &MHD_Callback_Https, this,
 			MHD_OPTION_HTTPS_MEM_KEY, key_pem,
-			MHD_OPTION_HTTPS_KEY_PASSWORD, "12345",
+			MHD_OPTION_HTTPS_KEY_PASSWORD, "123456",
                MHD_OPTION_HTTPS_MEM_CERT, cert_pem,
                MHD_OPTION_HTTPS_MEM_TRUST, root_ca_pem,
 			MHD_OPTION_CONNECTION_TIMEOUT, (unsigned int) 120,
