@@ -288,6 +288,10 @@ extern "C" int MHD_Callback_Https(void *cls,
         ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
         MHD_destroy_response(response);
      }
+ 
+     // free dynamically allocated memory
+     free (clientDistinguishedName);
+     gnutls_x509_crt_deinit(client_cert);
 
      return ret;
 }
