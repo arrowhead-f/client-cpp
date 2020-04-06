@@ -162,12 +162,12 @@ size_t SensorHandler::Callback_OrchestrationResponse(char *ptr, size_t size) {
 
         sToken = string(json_object_get_string(jToken));
 
-        std::string sProviderURI = "https://" + sIPAddress + ":" + std::to_string(uPort) + "/" + sURI + "?token=" + sToken; // + "&signature=" + signature;
+        std::string sProviderURI = "https://" + sIPAddress + ":" + std::to_string(uPort) + sURI + "?token=" + sToken; // + "&signature=" + signature;
 
         sendHttpsRequestToProvider(sProviderURI);
      }
      else{
-        std::string sProviderURI = "http://" + sIPAddress + ":" + std::to_string(uPort) + "/" + sURI;
+        std::string sProviderURI = "http://" + sIPAddress + ":" + std::to_string(uPort) + sURI;
         sendRequestToProvider(sProviderURI);
      }
 
