@@ -209,8 +209,8 @@ int SensorHandler::Callback_Serve_HTTP_GET(const char *URL, string *pResponse){
      printf("\nHTTP GET request received\n");
 
      printf("Received URL: %s\n", URL);
-     std::string tmp = "/" + customURL;
-	if (strcmp(tmp.c_str(), URL) != 0) {
+	// customURL should start with '/'
+	if (strcmp(customURL.c_str(), URL) != 0) {
 		printf("Error: Unknown URL: %s\n", URL);
 		return 1;
 	}
@@ -225,8 +225,8 @@ int SensorHandler::Callback_Serve_HTTPs_GET(const char *URL, string *pResponse, 
 	printf("\nHTTPs GET request received\n");
 
      printf("Received URL: %s\n", URL);
-     std::string tmp = "/" + customURL;
-	if (strcmp(tmp.c_str(), URL) != 0) {
+	// customURL should start with '/'
+	if (strcmp(customURL.c_str(), URL) != 0) {
 		printf("Error: Unknown URL: %s\n", URL);
 		return 1;
 	}
